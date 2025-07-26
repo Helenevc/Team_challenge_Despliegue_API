@@ -52,22 +52,21 @@ def predict(): # Ligado al endpoint '/api/v1/predict', con el método GET
     if Age is None or Continent is None or Sleep is None:
         return "Faltan argumentos, no se puede hacer predicciones"
     else:
-        input_vector = Sleep + list(continent_dummies.values()) + list(Age_dummies.values()) 
-    
+        input_vector = float(Sleep) + list(continent_dummies.values()) + list(Age_dummies.values()) 
         prediction = model.predict([input_vector])
-    
+        print= (f"{prediction}")
+        
     return jsonify({'predictions': prediction[0]})
-
 
 '''
 # Enruta la funcion al endpoint /api/v1/retrain
 @app.route("/api/v1/retrain/", methods=["GET"])
 def retrain(): # Ligado al endpoint '/api/v1/retrain/', metodo GET
-    if os.path.exists("data/Advertising_new.csv"):
-        data = pd.read_csv('data/Advertising_new.csv')
+    if os.path.exists("data/Students_Social_Media_addiction.csv"):
+        data = pd.read_csv('data/Students_Social_Media_addiction.csv')
 
-        X_train, X_test, y_train, y_test = train_test_split(data.drop(columns=['sales']),
-                                                        data['sales'],
+        X_train, X_test, y_train, y_test = train_test_split(data.drop(columns=['Addicted_Score']),
+                                                        data['Addicted_Score'],
                                                         test_size = 0.20,
                                                         random_state=42)
 
