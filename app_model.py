@@ -28,11 +28,25 @@ def predict(): # Ligado al endpoint '/api/v1/predict', con el método GET
     Continent = request.args.get('Continent', None)
     Sleep_Hours_Per_Night = request.args.get('Sleep_Hours_Per_Night', None)
 
+    if Age is None or Continent is None or Sleep_Hours_Per_Night is None:
+        return "Faltan argumentos, no se puede hacer predicciones"
+    
+    columnas = [  "Continent_Asia",  "Continent_Europe",  "Continent_North America",
+    "Continent_Oceania",  "Continent_South America"]
+    
+    continent_dummies = {col: 0 for col in columnas}
+    selected_col = f"Continent_{Continent}"
+    
+    if selected_col in continent_dummies: 
+        continent_dummies[selected_col]=1
+    else :
+        return f"Error: Continente '{Continent}' no reconocido"
+
     print(Age,Continent,Sleep_Hours_Per_Night)
     print(type(Age))
 
     if Age is None or Continent is None or Sleep_Hours_Per_Night is None:
-        return "Args empty, not enough data to predict"
+        return "Faltan argumentos, no se puede hacer predicciones"
     else:
         prediction = model.predict([[int(Age),str(Continent),round(float(Sleep_Hours_Per_Night),1)]])
     
