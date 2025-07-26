@@ -27,8 +27,17 @@ def predict(): # Ligado al endpoint '/api/v1/predict', con el método GET
     Age = request.args.get('Age', None)
     Continent = request.args.get('Continent', None)
     Sleep = request.args.get('Sleep_Hours_Per_Night', None)
-
+#tenemos hot encoding en el model, hay que pasar todas las columnas de Age y de Continente
+    col_age = ["Age_19", "Age_20", "Age_21", "Age_22", "Age_23", "Age_24"]
+    Age_dummies = {col: 0 for col in columnas}
+    selected_col = f"Age_{Age}"
     
+    if selected_col in Age_dummies: 
+        Age_dummies[selected_col]=1
+    else :
+        return f"Error: Age '{Age}' no reconocido"
+
+
     columnas = [  "Continent_Asia",  "Continent_Europe",  "Continent_North America",
     "Continent_Oceania",  "Continent_South America"]
     
@@ -43,7 +52,7 @@ def predict(): # Ligado al endpoint '/api/v1/predict', con el método GET
     if Age is None or Continent is None or Sleep is None:
         return "Faltan argumentos, no se puede hacer predicciones"
     else:
-        input_vector = [Age] + list(continent_dummies.values()) + [Sleep]
+        input_vector = list(Age_dummies.values()) + list(continent_dummies.values()) + Sleep
         prediction = model.predict([input_vector])
     
     return jsonify({'predictions': prediction[0]})
