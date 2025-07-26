@@ -52,7 +52,8 @@ def predict(): # Ligado al endpoint '/api/v1/predict', con el método GET
     if Age is None or Continent is None or Sleep is None:
         return "Faltan argumentos, no se puede hacer predicciones"
     else:
-        input_vector = list(Age_dummies.values()) + list(continent_dummies.values()) + Sleep
+        input_vector = Sleep + list(continent_dummies.values()) + list(Age_dummies.values()) 
+    
         prediction = model.predict([input_vector])
     
     return jsonify({'predictions': prediction[0]})
