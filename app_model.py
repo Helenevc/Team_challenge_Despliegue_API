@@ -21,9 +21,9 @@ def hello(): # Ligado al endopoint "/" o sea el home, con el método GET
 # Enruta la funcion al endpoint /api/v1/predict
 @app.route("/api/v1/predict", methods=["GET"])
 def predict(): # Ligado al endpoint '/api/v1/predict', con el método GET
-    with open('model.pkl', 'rb') as f:
+    with open('model_2.pkl', 'rb') as f:
         model_2 = pickle.load(f)
-        
+
 
     age = request.args.get('Age', None)
     continent = request.args.get('Continent', None)
