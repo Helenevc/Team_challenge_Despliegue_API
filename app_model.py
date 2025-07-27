@@ -47,16 +47,12 @@ def predict(): # Ligado al endpoint '/api/v1/predict', con el método GET
         continent_dummies[selected_col_cont]=1
     else :
         pint:(f"Advertencia: '{continent}', no es un continente valido")
-
-
-
     if age is None or continent is None or sleep is None:
         return "Faltan argumentos, no se puede hacer predicciones"
     else:
         input_vector = [float(sleep)] + list(continent_dummies.values()) + list(age_dummies.values()) 
         prediction = model_2.predict([input_vector])
         print= (f"{prediction}")
-
     return jsonify({'predictions': prediction[0]})
 
 '''
