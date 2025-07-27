@@ -22,7 +22,8 @@ def hello(): # Ligado al endopoint "/" o sea el home, con el método GET
 @app.route("/api/v1/predict", methods=["GET"])
 def predict(): # Ligado al endpoint '/api/v1/predict', con el método GET
     with open('model.pkl', 'rb') as f:
-        model = pickle.load(f)
+        model_2 = pickle.load(f)
+        
 
     age = request.args.get('Age', None)
     continent = request.args.get('Continent', None)
@@ -53,7 +54,7 @@ def predict(): # Ligado al endpoint '/api/v1/predict', con el método GET
         return "Faltan argumentos, no se puede hacer predicciones"
     else:
         input_vector = [float(sleep)] + list(continent_dummies.values()) + list(age_dummies.values()) 
-        prediction = model.predict([input_vector])
+        prediction = model_2.predict([input_vector])
         print= (f"{prediction}")
 
     return jsonify({'predictions': prediction[0]})
