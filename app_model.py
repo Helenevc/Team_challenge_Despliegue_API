@@ -24,38 +24,38 @@ def predict(): # Ligado al endpoint '/api/v1/predict', con el método GET
     with open('model.pkl', 'rb') as f:
         model = pickle.load(f)
 
-    Age = request.args.get('Age', None)
-    Continent = request.args.get('Continent', None)
-    Sleep = request.args.get('Sleep_Hours_Per_Night', None)
-#tenemos hot encoding en el model, hay que pasar todas las columnas de Age y de Continente
+    age = request.args.get('Age', None)
+    continent = request.args.get('Continent', None)
+    sleep = request.args.get('Sleep_Hours_Per_Night', None)
+#tenemos hot encoding en el model, hay que pasar todas las columnas "Age "
     col_age = ["Age_19", "Age_20", "Age_21", "Age_22", "Age_23", "Age_24"]
-    Age_dummies = {col: 0 for col in columnas}
-    selected_col = f"Age_{Age}"
+    age_dummies = {col: 0 for col in col_age}
+    selected_col_age = f"Age_{age}"
     
-    if selected_col in Age_dummies: 
-        Age_dummies[selected_col]=1
+    if selected_col_age in age_dummies:
+        age_dummies[selected_col_age] = 1
+    else:
+        print(f"Advertencia: '{selected_col_age}', no es un valor permitido")
+
+# y todas las columnas "continente"
+    col_cont = ["Continent_Asia","Continent_Europe","Continent_North America","Continent_Oceania","Continent_South America"]
+    continent_dummies = {col: 0 for col in col_cont}
+    selected_col_cont = f"Continent_{continent}"
+    
+    if selected_col_cont in continent_dummies: 
+        continent_dummies[selected_col_cont]=1
     else :
-        return f"Error: Age '{Age}' no reconocido"
+        pint:(f"Advertencia: '{continent}', no es un continente valido")
 
 
-    columnas = [  "Continent_Asia",  "Continent_Europe",  "Continent_North America",
-    "Continent_Oceania",  "Continent_South America"]
-    
-    continent_dummies = {col: 0 for col in columnas}
-    selected_col = f"Continent_{Continent}"
-    
-    if selected_col in continent_dummies: 
-        continent_dummies[selected_col]=1
-    else :
-        return f"Error: Continente '{Continent}' no reconocido"
 
-    if Age is None or Continent is None or Sleep is None:
+    if age is None or continent is None or sleep is None:
         return "Faltan argumentos, no se puede hacer predicciones"
     else:
-        input_vector = float(Sleep) + list(continent_dummies.values()) + list(Age_dummies.values()) 
+        input_vector = [float(sleep)] + list(continent_dummies.values()) + list(age_dummies.values()) 
         prediction = model.predict([input_vector])
         print= (f"{prediction}")
-        
+
     return jsonify({'predictions': prediction[0]})
 
 '''
