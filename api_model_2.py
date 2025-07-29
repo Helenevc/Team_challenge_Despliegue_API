@@ -1,6 +1,12 @@
 from flask import Flask, jsonify, request
+import os
 import pickle
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import Lasso
+from sklearn.metrics import mean_squared_error, mean_absolute_percentage_error
 import numpy as np
+
 app = Flask(__name__)
 @app.route("/", methods=["GET"])
 def hello():
@@ -45,3 +51,31 @@ def predict():
     return jsonify({'predictions': prediction_value})
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
+# Enruta la función al endpoint /api/v1/retrain
+@app.route("/api/v1/retrain/", methods=["GET"])
+def retrain():  # Ligado al endpoint '/api/v1/retrain/', método GET
+    if os.path.exists("data/Students_Social_Media_addiction.csv"):
+        data = pd.read_csv("data/Students_Social_Media_addiction.csv")
+        # Separar features y target
+        X = data.drop(columns=["Addicted_Score"])
+        y = data["Addicted_Score"]
+        # División train/test
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.20, random_state=42
+        )
+        # Entrenar modelo
+        model = Lasso(alpha=6000)
+        model.fit(X_train, y_train)
+        # Evaluar modelo
+        rmse = np.sqrt(mean_squared_error(y_test, model.predict(X_test)))
+        mape = mean_absolute_percentage_error(y_test, model.predict(X_test))
+        # Guardar modelo
+        with open("model_2.pkl", "wb") as f:
+            pickle.dump(model, f)
+        return f"Model retrained. New evaluation metric RMSE: {rmse:.4f}, MAPE: {mape:.4f}"
+    else:
+        return "<h2>New data for retrain NOT FOUND. Nothing done!</h2>"
+
