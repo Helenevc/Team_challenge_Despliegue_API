@@ -52,8 +52,8 @@ def predict(): # Ligado al endpoint '/api/v1/predict', con el método GET
     else:
         input_vector = [float(sleep)] + list(continent_dummies.values()) + list(age_dummies.values()) 
         prediction = model_2.predict([input_vector])
-        print= (f"{prediction}")
-    return jsonify({'predictions': prediction[0]})
+        print(prediction)
+    return jsonify({'predictions': float(prediction[0])})
 
 '''
 # Enruta la funcion al endpoint /api/v1/retrain
