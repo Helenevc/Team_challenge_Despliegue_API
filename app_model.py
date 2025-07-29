@@ -46,7 +46,7 @@ def predict(): # Ligado al endpoint '/api/v1/predict', con el método GET
     if selected_col_cont in continent_dummies: 
         continent_dummies[selected_col_cont]=1
     else :
-        pint:(f"Advertencia: '{continent}', no es un continente valido")
+        print:(f"Advertencia: '{continent}', no es un continente valido")
     if age is None or continent is None or sleep is None:
         return "Faltan argumentos, no se puede hacer predicciones"
     else:
